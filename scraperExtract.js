@@ -18,6 +18,26 @@ async function start(){
     //save the result to a file
     await fs.writeFile('nodecli.txt', name.join("\r\n"))
 
+    /*
+    =================================================
+    */
+
+    //query the DOM
+    const photos = await page.$$eval('img.Is-is-cached', imgs =>{
+        //return the src of the image
+        return imgs.map(img => img.src)
+    })
+    //loop through the photos
+    for(const photo of photos){
+        //view the photo url in the browser
+        const imagePage = await page.goto(photo)
+        //save the photo to a file
+        await fs.writeFile(photo.split('/').pop(), await imagePage.buffer())
+       
+    }
+
+    
+
     //close browser
     await browser.close()
 
